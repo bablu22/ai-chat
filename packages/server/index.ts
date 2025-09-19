@@ -1,18 +1,18 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import dotenv from 'dotenv';
+import router from './routes';
 
 dotenv.config();
 
-const app = express();
 const PORT = process.env.PORT || 5000;
+const app = express();
+app.use(express.json());
 
-app.get('/', (req: Request, res: Response) => {
-   res.send('Hello, World!');
-});
+app.use(router);
 
-app.get('/health', (req: Request, res: Response) => {
-   res.status(200).send('OK');
+app.use((err: Error, req: Request, res: Response, next: Function) => {
+   res.status(500).json({ error: err.message });
 });
 
 app.listen(PORT, () => {
